@@ -1,14 +1,16 @@
 #!/usr/bin/python
 
-from sys import argv, exit
 from urllib import urlretrieve
 
-if len(argv) != 3:
-	print "Use in following format: " + argv[0] + " <URL> <FILENAME>"
-	exit(1)
+def get( URL, FILENAME ):
+	"""get( URL, FILENAME )
+	Downloads the given website (URL) and saves it in FILENAME"""
+	try:
+		results = urlretrieve( str(URL), str(FILENAME) )
+	except:
+		print "Error connecting to URL"
+	
+if __name__ == "__main__":
 
-try:
-	results = urlretrieve( str(argv[1]), str(argv[2]) )
-except:
-	print "Error connecting to URL"
-
+	get( "http://www.google.com", "website.html" )
+	
