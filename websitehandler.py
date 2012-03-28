@@ -10,6 +10,9 @@
 # load cookie, attepmt login, and follow redirects
 # --resave cookie?
 #
+# March 28, 2012
+# Successful login attempt. Cookie saved as "cookie.txt" in
+# same directory
 
 import cookielib
 import urllib
