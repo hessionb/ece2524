@@ -11,25 +11,55 @@
 # --resave cookie?
 #
 
-import urllib2, cookielib
+import cookielib
+import urllib
+import urllib2
+	
+url = "https://banweb.banner.vt.edu/ssb/prod/twbkwbis.P_ValLogin"
 
-def start_session( URL ):
-	"""Starts a cookie session"""
+class HokieLogger(object):
 	
-	# Makes a cookiejar
-	jar = cookielib.LWPCookieJar("cookies")
-	
-	# Builds an opener to handle cookies and redirects
-	opener = urllib2.build_opener( urllib2.HTTPCookieProcessor(jar), urllib2.HTTPRedirectHandler() )
-	
-	# Opens url
-	response = opener.open( URL )
-	
-	# Saves cookie to cookie.txt
-	jar.save("cookie.txt", True, True)
-	
+	def __init__(self, login, password):
+		"""Initializing"""
+		
+		self.login = login
+		self.password = password
+		
+		# Create cookiejar
+		self.jar = cookielib.LWPCookieJar()
+		
+		# Allow redirects, accept cookies, handle http(s)
+		self.opener = urllib2.build_opener(
+			urllib2.HTTPRedirectHandler(),
+			urllib2.HTTPHandler(),
+			urllib2.HTTPSHandler(),
+			urllib2.HTTPCookieProcessor(self.jar)
+		)
+		# Add a firefox header to fool website
+		self.opener.addheaders = [('User-agent', "Mozilla/5.0")]
+		
+		self.hokiespalogin()
+		
+		# Save cookie
+		self.jar.save("cookie.txt", True, True)
+		
+	def hokiespalogin(self):
+		"""Logs in to Hokiespa"""
+		
+		# Create post data
+		login_data = urllib.urlencode({
+			'pid' : self.login,
+			'password' : self.password
+		})
+		# Accept initial cookie
+		res = self.opener.open("http://hokiespa.vt.edu")
+		# Request login
+		req = urllib2.Request(url, login_data)
+		# Send request
+		page = self.opener.open(req)
+		print page.read() # Read to make sure login was successful
+
 if __name__ == "__main__":
-	
-	URL = "http://www.hokiespa.vt.edu"
-	start_session( URL );
-	
+
+	user = HokieLogger( 'user', 'password' )
+
