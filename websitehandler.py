@@ -15,10 +15,17 @@ import urllib2, cookielib
 
 def start_session( URL ):
 	"""Starts a cookie session"""
+	
+	# Makes a cookiejar
 	jar = cookielib.LWPCookieJar("cookies")
+	
+	# Builds an opener to handle cookies and redirects
 	opener = urllib2.build_opener( urllib2.HTTPCookieProcessor(jar), urllib2.HTTPRedirectHandler() )
 	
+	# Opens url
 	response = opener.open( URL )
+	
+	# Saves cookie to cookie.txt
 	jar.save("cookie.txt", True, True)
 	
 if __name__ == "__main__":
