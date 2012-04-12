@@ -1,0 +1,6 @@
+#!/usr/bin/python
+
+from website.py import *
+
+get( "Google.com", "website.html" )
+
