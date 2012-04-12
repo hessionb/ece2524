@@ -112,7 +112,7 @@ class HokieLogger(object):
 		res = self.opener.open(req)
 		return res.read(); # Return page
 
-	def checkSeats(self, info):
+	def checkSeats(self, page):
 		"""
 		Extracts available seats from site and returns True if 
 		class is open.
