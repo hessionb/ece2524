@@ -143,6 +143,7 @@ class HokieLogger(object):
 
 def isnum(num):
 	"""Check if string is a number"""
+
 	try:
 		float(num)
 		return True
