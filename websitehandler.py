@@ -14,9 +14,9 @@
 # fix for this, it'd be greatly appreciated.
 #
 # April 11, 2012
-# Searches through html (isn't modular yet). Found a
-# way to load cookies used previously. Also changed
-# the style of cookies to Mozilla netscape.
+# Searches through html. Found a way to load cookies 
+# used previously. Also changed the style of cookies 
+# to Mozilla netscape.
 #
 #
 #
@@ -115,9 +115,28 @@ class HokieLogger(object):
 		res = self.opener.open(req)
 		return res.read(); # Return page
 
+	def checkSeats(self, info):
+		"""
+		Extracts available seats from site and returns True if 
+		class is open.
+		"""
+		info = []
+		for line in page.split('\n'): # Split string into lines
+			if '<TD CLASS="mpdefault"style=text-align:center;>' in line:
+				info.append(line.strip())
+
+		# Strip extra crap off of the line
+		seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').rstrip('</TD>')
+
+		# Check if its a number, then check if greater than 0
+		if len(info) == 5 and isnum(seats) and seats > 0:
+			return True
+		else:
+			return False
+
 	def setCookieDir(self, location):
 		"""Changes cookie directory"""
-		
+
 		self.cookiedir = location;
 
 
@@ -146,17 +165,9 @@ if __name__ == "__main__":
 	page = user.lookupclass( '92164', '09', '2012', 'ECE', '4564' )
 	print "done."
 
-	info = []
-	for line in page.split('\n'): # Split string into lines
-		if '<TD CLASS="mpdefault"style=text-align:center;>' in line:
-			info.append(line.strip())
-
-	# Strip extra crap off of the line
-	seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').rstrip('</TD>')
-	
-	# Check if its a number, then check if greater than 0
-	if isnum(seats) and seats > 0 and len(info) == 5:
-		print "Class open! Num: " + seats
+	# Checks if class is open
+	if user.checkSeats(page):
+		print "Class open!"
 	else:
-		print "Not open! Num: " + seats
+		print "Class closed!"
 
