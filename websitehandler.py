@@ -18,12 +18,14 @@
 # way to load cookies used previously. Also changed
 # the style of cookies to Mozilla netscape.
 #
+#
+#
 
 import cookielib
 import urllib
 import urllib2
-import os
 from sys import argv,exit
+
 
 
 class HokieLogger(object):
@@ -33,6 +35,7 @@ class HokieLogger(object):
 
 		self.login = login
 		self.password = password
+		self.cookiedir = "cookie.txt"
 
 		# Create cookiejar
 		self.jar = cookielib.MozillaCookieJar()
@@ -57,12 +60,22 @@ class HokieLogger(object):
 		]
 
 		try:
-			open("cookie.txt",'r')
-			self.jar.load("cookie.txt", True, True)
+			open(self.cookiedir,'r') # Check for existing cookies
+			print "Loading cookies...",
+			self.jar.load(self.cookiedir, True, True) # Load
+			# Check if cookie expired
+			for cookie in self.jar:
+				if cookie.is_expired():
+					print "expired. Relogging...",
+					self.hokiespalogin()
+					break
+			print "done."
 		except:
-			self.hokiespalogin()
+			print "Relogging...",
+			self.hokiespalogin() # Logs in if no cookies
 			# Uncomment to save cookie
-			self.jar.save("cookie.txt", True, True)
+			self.jar.save(self.cookiedir, True, True) # Saves
+			print "done."
 
 	def hokiespalogin(self):
 		"""Logs in to Hokiespa"""
@@ -102,7 +115,14 @@ class HokieLogger(object):
 		res = self.opener.open(req)
 		return res.read(); # Return page
 
-def is_number(num):
+	def setCookieDir(self, location):
+		"""Changes cookie directory"""
+		
+		self.cookiedir = location;
+
+
+
+def isnum(num):
 	"""Check if string is a number"""
 	try:
 		float(num)
@@ -122,7 +142,9 @@ if __name__ == "__main__":
 	# Login to HokieSpa
 	user = HokieLogger( argv[1], argv[2] )
 	# Look up class
+	print "Looking up class...",
 	page = user.lookupclass( '92164', '09', '2012', 'ECE', '4564' )
+	print "done."
 
 	info = []
 	for line in page.split('\n'): # Split string into lines
@@ -133,7 +155,7 @@ if __name__ == "__main__":
 	seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').rstrip('</TD>')
 	
 	# Check if its a number, then check if greater than 0
-	if is_number(seats) and seats > 0:
+	if isnum(seats) and seats > 0 and len(info) == 5:
 		print "Class open! Num: " + seats
 	else:
 		print "Not open! Num: " + seats
