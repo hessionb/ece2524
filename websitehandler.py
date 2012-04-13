@@ -8,11 +8,6 @@
 # Class "HokieLogger" logs into hokiespa and retrieves
 # course information
 #
-# March 28, 2012
-# Successful login attempt. Python won't keep cookies 
-# alive after exiting the program. If anyone has a 
-# fix for this, it'd be greatly appreciated.
-#
 # April 11, 2012
 # Searches through html. Found a way to load cookies 
 # used previously. Also changed the style of cookies 
@@ -126,9 +121,13 @@ class HokieLogger(object):
 		seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').rstrip('</TD>')
 
 		# Check if its a number, then check if greater than 0
-		if len(info) == 5 and isnum(seats) and seats > 0:
-			return True
+		if len(info) == 5:
+			if isnum(seats) and seats > 0:
+				return True
+			else:
+				return False
 		else:
+			self.hokiespalogin(); # Try to relog
 			return False
 
 	def setCookieDir(self, location):
