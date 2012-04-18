@@ -1,35 +1,34 @@
 #!/usr/bin/python
 
 # # #
-# Brian Hession -- March 28, 2012
+# Brian Hession, Erik Wenkel, James Miller
 #
-# Testing login functions with python
-#
-# Class "HokieLogger" logs into hokiespa and retrieves
-# course information
-#
-# April 11, 2012
-# Searches through html. Found a way to load cookies 
-# used previously. Also changed the style of cookies 
-# to Mozilla netscape.
-#
+# HokieLogger class module. 
+# Logs in to hokieSpa and checks if class 
+# is open.
 #
 #
 
 import cookielib
 import urllib
 import urllib2
-from sys import argv,exit
 
 
 
 class HokieLogger(object):
 
-	def __init__(self, login, password):
+
+	# # #
+	# Constructor
+	#
+	# Arguments: None
+	#
+	# Returns HokieLogger object
+	#
+	#
+	def __init__(self):
 		"""Initialize"""
 
-		self.login = login
-		self.password = password
 		self.cookiedir = "cookie.txt"
 
 		# Create cookiejar
@@ -51,33 +50,24 @@ class HokieLogger(object):
 			('Cache-Control', 'max-age=0')
 		]
 
-		try:
-			open(self.cookiedir,'r') # Check for existing cookies
-			print "Loading cookies...",
-			self.jar.load(self.cookiedir, True, True) # Load
-			# Check if cookie expired
-			for cookie in self.jar:
-				if cookie.is_expired():
-					print "expired. Relogging...",
-					self.hokiespalogin()
-					break
-			print "done."
-		except:
-			print "Relogging...",
-			self.hokiespalogin() # Logs in if no cookies
-			# Uncomment to save cookie
-			self.jar.save(self.cookiedir, True, True) # Saves
-			print "done."
 
-	def hokiespalogin(self):
+	# # #
+	# HokieSpa Login
+	#
+	# Arguments: login (PID), password
+	#
+	# Returns: True if Logged in, False if not
+	#
+	#
+	def hokiespalogin(self, login, password):
 		"""Logs in to Hokiespa"""
 
 		# Login website
 		loginurl = "https://banweb.banner.vt.edu/ssb/prod/twbkwbis.P_ValLogin"
 		# Create post data
 		login_data = urllib.urlencode({
-			'pid' : self.login,
-			'password' : self.password
+			'pid' : login,
+			'password' : password
 		})
 		# Accept cookie from Hokiespa
 		res = self.opener.open("http://hokiespa.vt.edu")
@@ -85,8 +75,23 @@ class HokieLogger(object):
 		req = urllib2.Request(loginurl, login_data)
 		# Send request and retrieve cookie
 		res = self.opener.open(req)
-		# print res.read() # Uncomment to make sure login was successful
+		
+		for line in res.read().split('\n'):
+			if 'Welcome,' in line:
+				return True
+		return False
 
+
+	# # #
+	# Lookup class
+	#
+	# Arguments: crn, term (Fall=09,Spring=01), year (yyyy),
+	#				 subj, crse
+	#
+	# Returns: Number of seats open in the class, or "Failed"
+	#			  if not logged in or cookie expired
+	#
+	#
 	def lookupclass(self, crn, term, year, subj, crse):
 		"""Course information"""
 
@@ -105,9 +110,19 @@ class HokieLogger(object):
 		req = urllib2.Request(courseurl, course_data)
 		# Send request
 		res = self.opener.open(req)
-		return res.read(); # Return page
+		return self.checkseats( res.read() ); # Return page
 
-	def checkSeats(self, page):
+
+	# # #
+	# Check seats
+	#
+	# Arguments: page (html page split by '\n')
+	#
+	# Returns Number of seats open in the class, or "Failed"
+	#			  if not logged in or cookie expired 
+	#
+	#
+	def checkseats(self, page):
 		"""
 		Extracts available seats from site and returns True if 
 		class is open.
@@ -122,21 +137,68 @@ class HokieLogger(object):
 
 		# Check if its a number, then check if greater than 0
 		if len(info) == 5:
-			if isnum(seats) and seats > 0:
-				return True
-			else:
-				return False
+			if isnum(seats):
+				return seats
 		else:
-			self.hokiespalogin(); # Try to relog
-			return False
+			return "Failed"
 
-	def setCookieDir(self, location):
+
+	# # #
+	# Set Cookie Directory
+	#
+	# Arguments: directory to new cookie location
+	#
+	# Returns: Nothing
+	#
+	#
+	def setcookiedir(self, location):
 		"""Changes cookie directory"""
 
 		self.cookiedir = location;
 
 
+	# # #
+	# Save cookie
+	#
+	# Arguments: None
+	#
+	# Returns: Nothing
+	#
+	#	
+	def savecookie(self):
+		"""Saves cookies"""
 
+		self.jar.save(self.cookiedir, True, True)
+
+
+	# # #
+	# Load cookie
+	#
+	# Arguments: None
+	#
+	# Returns: True if load was successful, False if not
+	#
+	#
+	def loadcookie(self):
+		"""Loads  cookies"""
+
+		try:
+			open(self.cookiedir)
+		except:
+			return False
+
+		self.jar.load(self.cookiedir, True, True)
+		return True
+
+
+# # #
+# Is num
+#
+# Arguments: A string
+#
+# Returns: True if num is a number, False if not
+#
+#
 def isnum(num):
 	"""Check if string is a number"""
 
@@ -145,26 +207,4 @@ def isnum(num):
 		return True
 	except ValueError:
 		return False
-
-
-
-if __name__ == "__main__":
-
-	# Input credentials as initial parameters
-	if len(argv) < 3:
-		print "Run as: " + argv[0] + " <username> <password>"
-		exit(1)
-
-	# Login to HokieSpa
-	user = HokieLogger( argv[1], argv[2] )
-	# Look up class
-	print "Looking up class...",
-	page = user.lookupclass( '92164', '09', '2012', 'ECE', '4564' )
-	print "done."
-
-	# Checks if class is open
-	if user.checkSeats(page):
-		print "Class open!"
-	else:
-		print "Class closed!"
 
