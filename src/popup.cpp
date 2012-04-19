@@ -30,6 +30,7 @@ Popup::Popup()
 	set_resizable( false );
 	set_border_width( 5 );
 	set_keep_above( true );
+	set_decorated( false );
 	
 	// Term combo
 	term_combo.set_id_column( 0 );
@@ -359,10 +360,24 @@ Popup::Popup()
 Popup::~Popup() {}
 
 // set_tree
-void Popup::set_values( Gtk::Window* g, Tree* t ) {
+void Popup::set_values( Gtk::Window* g, Tree* t, Error* e ) {
 
 	parent = g;
 	classlist = t;
+	error = e;
+}
+
+// Error
+void Popup::on_error() {
+
+	error->setfields( this );
+	set_sensitive( false );
+	
+	int x, y;
+	get_position( x, y );
+	error->move( x + 30, y + 60 );
+	
+	error->show();
 }
 
 bool isvalid( Glib::ustring s, unsigned int len ) {
@@ -387,10 +402,11 @@ void Popup::on_apply() {
 	course.subj = subj_entry.get_text();
 	course.crse = crse_entry.get_text();
 	
-	if(isvalid(course.crn,5))
-		std::cout << "good" << std::endl;
-	if(isvalid(course.crse,4))
-		std::cout << "good" << std::endl;
+	if(!isvalid(course.crn,5) || !isvalid(course.crse, 4)) {
+		error->setlabel( "Invalid Field" );
+		on_error();
+		return;
+	}
 	
 	// Reset Fields
 	crn_entry.delete_text( 0, -1 );

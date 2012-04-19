@@ -29,7 +29,7 @@ Tree::~Tree() {}
 void Tree::loadfromfile() {
 
 	// Read from text file
-	std::ifstream coursefile( "include/.courses" );
+	std::ifstream coursefile( "etc/.courses" );
 	if( coursefile.is_open() ) {
 		while( true ) {
 			Tree::Course c;
@@ -75,8 +75,8 @@ void Tree::deleteclass() {
 	if( *iter ) {
 	
 		Glib::ustring str = (*iter)[m_Columns.m_col_crn];
-		std::ifstream coursefile( "include/.courses" );
-		std::ofstream tempfile( "include/.courses.tmp" );
+		std::ifstream coursefile( "etc/.courses" );
+		std::ofstream tempfile( "etc/.courses.tmp" );
 		if( coursefile.is_open() && tempfile.is_open() ) {
 			while( true ) {
 				char buf[10], line[256];
@@ -89,8 +89,8 @@ void Tree::deleteclass() {
 			}
 			coursefile.close();
 			tempfile.close();
-			std::remove( "include/.courses" ); // Remove and rename file
-			std::rename( "include/.courses.tmp", "include/.courses" );
+			std::remove( "etc/.courses" ); // Remove and rename file
+			std::rename( "etc/.courses.tmp", "etc/.courses" );
 		}
 		m_refTreeModel->erase( iter ); // Erase from tree
 	}

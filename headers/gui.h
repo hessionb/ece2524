@@ -20,6 +20,7 @@
 #include "credentials.h"
 #include "options.h"
 #include "popup.h"
+#include "error.h"
 
 
 // Create class GUI extending Gtk::Window
@@ -66,6 +67,9 @@ class GUI : public Gtk::Window {
 		
 		// Test
 		Popup popup;
+		
+		// Error
+		Error error;
 };
 
 #endif

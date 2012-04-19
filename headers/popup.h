@@ -22,6 +22,7 @@
 #include <glibmm/ustring.h>
 
 #include "tree.h"
+#include "error.h"
 
 
 class Popup : public Gtk::Window {
@@ -30,12 +31,13 @@ class Popup : public Gtk::Window {
 		Popup();
 		virtual ~Popup();
 		
-		void set_values( Gtk::Window* parent, Tree* t );
+		void set_values( Gtk::Window* parent, Tree* t, Error* e );
 
 	protected:
 		// Signal handlers
 		void on_apply();
 		void on_close();
+		void on_error();
 		
 		// Entry model
 		class ModelColumns : public Gtk::TreeModel::ColumnRecord {
@@ -46,8 +48,7 @@ class Popup : public Gtk::Window {
 				}
 				
 				Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-		};
-		ModelColumns m_columns;
+		} m_columns;
 		
 		// For entry completion
 		typedef std::map<int, Glib::ustring> type_actions_map;
@@ -70,6 +71,7 @@ class Popup : public Gtk::Window {
 		// Pointers to Parent widgets
 		Gtk::Window* parent;
 		Tree* classlist;
+		Error* error;
 };
 
 #endif

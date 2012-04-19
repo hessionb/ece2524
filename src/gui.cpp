@@ -82,10 +82,10 @@ void GUI::deleteclass() {
 void GUI::popupwindow() {
 
 	// Make window popup
-	popup.set_values( this, &classtree );
+	popup.set_values( this, &classtree, &error );
 	int x, y;
 	get_position( x, y );
-	popup.move( x + 15, y + 15 );
+	popup.move( x + 15, y + 50 );
 	set_sensitive( false );
 	popup.show();
 }
