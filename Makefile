@@ -1,6 +1,6 @@
-SRC := src/driver.cpp src/gui.cpp
+SRC := src/driver.cpp src/gui.cpp src/tree.cpp src/credentials.cpp src/options.cpp src/popup.cpp
 INC := ./headers/
-NAME := ClassCatcher
+NAME := gClassCatcher
 CC := g++
 FLAGS := -Wall -g
 PKG := `pkg-config gtkmm-3.0 --cflags --libs`

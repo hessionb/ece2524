@@ -9,10 +9,18 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include <gtkmm/button.h>
 #include <gtkmm/window.h>
+#include <gtkmm/button.h>
 #include <gtkmm/box.h>
-#include <gtkmm/label.h>
+#include <gtkmm/notebook.h>
+#include <gtkmm/scrolledwindow.h>
+#include <glibmm/ustring.h>
+
+#include "tree.h"
+#include "credentials.h"
+#include "options.h"
+#include "popup.h"
+
 
 // Create class GUI extending Gtk::Window
 class GUI : public Gtk::Window {
@@ -23,12 +31,41 @@ class GUI : public Gtk::Window {
 
 	protected:							// Notice how it is "protected"
 		// Signal handlers
-		void on_button_clicked();
+		void deleteclass();
+		void popupwindow();
 
-		// Widgets
-		Gtk::VBox m_VBox;				// Vertical box
-		Gtk::Label m_Label;			// Label
-		Gtk::Button m_button;		// Button
+		// Formatting
+		Gtk::Notebook notebook;
+		Gtk::VBox m_VBox;
+		Gtk::HBox m_HBox1;
+		
+		// Credentials
+		Credentials cred;
+		
+		// Options
+		Options options;
+		
+		// First page formatting
+		Gtk::VBox firstpage;
+		
+		// First page widgets
+		Gtk::Button apply_button, close_button;
+		
+		// Second page formatting
+		Gtk::VBox secondpage;
+		Gtk::HBox m_HBox2;
+		
+		// Scrolled window
+		Gtk::ScrolledWindow m_ScrolledWindow;
+		
+		// Class list
+		Tree classtree;
+		
+		// Second page widgets
+		Gtk::Button add_button, remove_button;
+		
+		// Test
+		Popup popup;
 };
 
 #endif

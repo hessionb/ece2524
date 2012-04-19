@@ -28,7 +28,7 @@ class HokieLogger(object):
 	def __init__(self):
 		"""Initialize"""
 
-		self.cookiedir = "cookie.txt"
+		self.cookiedir = "etc/cookie.txt"
 
 		# Create cookiejar
 		self.jar = cookielib.MozillaCookieJar()

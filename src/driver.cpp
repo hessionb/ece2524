@@ -8,6 +8,7 @@
 #include "gui.h"
 #include <gtkmm/main.h>
 
+
 int main( int argc, char *argv[] ) {
 
 	// Do not know what it does but is necessary

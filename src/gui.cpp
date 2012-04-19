@@ -9,39 +9,84 @@
 
 #include "gui.h"
 
-int clicks = 0; // Global variable counting clicks
 
 GUI::GUI()
 :
 	// Defines widgets in constructor
-	m_VBox( false, 5 ),
-	m_Label( "This is an Example" ),
-	m_button("Press")
+	apply_button( "_Apply", true ),
+	close_button( "_Close", true ),
+	add_button( "A_dd Class", true ),
+	remove_button( "Re_move Class", true )
 {
-	set_title( "Example" );
-	set_border_width( 10 );
+	// Format window
+	set_title( "Class Catcher" );
+	set_resizable( false );
+	set_size_request( 295, 300 );
+	set_border_width( 5 );
+	
+	// TreeView
+	m_ScrolledWindow.set_policy( Gtk::POLICY_AUTOMATIC,
+			Gtk::POLICY_AUTOMATIC );
+	m_ScrolledWindow.add( classtree );
+	add_button.set_size_request( 85, 5 );
+	remove_button.set_size_request( 85, 5 );
+	m_HBox2.pack_end( remove_button, Gtk::PACK_SHRINK );
+	m_HBox2.pack_end( add_button, Gtk::PACK_SHRINK );
+	secondpage.set_border_width( 5 );
+	secondpage.pack_start( m_ScrolledWindow, 
+			Gtk::PACK_EXPAND_WIDGET );
+	secondpage.pack_start( m_HBox2, Gtk::PACK_SHRINK );
+	
+	// Notebook
+	firstpage.set_border_width( 5 );
+	firstpage.pack_start( cred, Gtk::PACK_SHRINK );
+	firstpage.pack_start( options, Gtk::PACK_SHRINK );
+	notebook.append_page( firstpage, "General" );
+	notebook.append_page( secondpage, "Classes" );
+	
+	// Apply and Close button
+	close_button.set_size_request( 85, 5 );
+	apply_button.set_size_request( 85, 5 );
+	m_HBox1.pack_end( close_button, Gtk::PACK_SHRINK );
+	m_HBox1.pack_end( apply_button, Gtk::PACK_SHRINK );
+	
+	// Pack notebook and closing into final frame
+	m_VBox.pack_start( notebook, Gtk::PACK_EXPAND_WIDGET );
+	m_VBox.pack_start( m_HBox1, Gtk::PACK_SHRINK );
+	
+	// Signal handling
+	close_button.signal_clicked().connect( sigc::mem_fun( *this, 
+			&GUI::hide ) );
+	remove_button.signal_clicked().connect( sigc::mem_fun( *this,
+			&GUI::deleteclass ) );
+	add_button.signal_clicked().connect( sigc::mem_fun( *this,
+			&GUI::popupwindow ) );
+	
+	// Add to window
+	add( m_VBox );
 
-	// When the button receives the "clicked" signal, it will call
-	// the on_button_clicked() method defined below.
-	m_button.signal_clicked().connect(sigc::mem_fun(*this,
-		        &GUI::on_button_clicked));
-
-	// Pack widgets into vertically aligned box
-	m_VBox.pack_start( m_Label, Gtk::PACK_SHRINK );
-	m_VBox.pack_start( m_button, Gtk::PACK_SHRINK );
-
-	// Add the VBox to the window
-	add(m_VBox);
-
-	// The final step is to display all the widgets
+	// Show everything
 	show_all_children();
 }
 
 GUI::~GUI() {} // Empty destructor
 
-void GUI::on_button_clicked() {
-	++clicks;
-	char str[20] = "";
-	sprintf( str, "Num pressed: %i", clicks );
-	m_Label.set_text( str ); // Sets text of Label m_Label
+// Delete class
+void GUI::deleteclass() {
+	
+	// Deletes selected class
+	classtree.deleteclass();
 }
+
+// Make window popup
+void GUI::popupwindow() {
+
+	// Make window popup
+	popup.set_values( this, &classtree );
+	int x, y;
+	get_position( x, y );
+	popup.move( x + 15, y + 15 );
+	set_sensitive( false );
+	popup.show();
+}
+

@@ -14,7 +14,8 @@
 #
 
 from optparse import OptionParser
-from sys import path,argv,exit
+from sys import path,exit
+from time import sleep
 path.append('include')
 from hokielogger import HokieLogger
 
@@ -32,9 +33,9 @@ def login( username, password ):
 	check = user.hokiespalogin( username, password );
 	if check:
 		user.savecookie()
-		print "Login Successful"
+		return True
 	else:
-		print "Login Failed"
+		return False
 
 
 # # #
@@ -46,30 +47,40 @@ def login( username, password ):
 # 					 saved cookie
 #
 #
-def checkclass( crn, term, year, subj, crse ):
+def checkclass( out, crn, term, year, subj, crse ):
 	"""Checks class"""
 
 	user = HokieLogger();
 	check = user.loadcookie()
 	if check:
 		seats = user.lookupclass( crn, term, year, subj, crse )
-		print seats
+		out.write( "CRN: " + str(crn) + " - " + str(seats) + '\n' )
 	else:
-		print "Cannot load cookies"
+		out.write("Cannot load cookies\n")
 
 
 # Main
 if __name__ == "__main__":
 
-	parser = OptionParser(usage="usage: %prog [-l|-c] args")
+	parser = OptionParser(usage="usage: %prog [-c|-f] args")
 	parser.disable_interspersed_args()
 	parser.add_option("-l",action="store",metavar="ARGS",
 							dest='log_args',nargs=2,type="string",
-							help="Login - args: <username> <password>")
+							help="Login - args: <username>" 
+								  " <password>")
 	parser.add_option("-c",action="store",metavar="ARGS",
 							dest='check_args',nargs=5,type="string",
-							help="Check Class - args: <crn> <term> <year> "
-								  "<subj> <crse>")
+							help="Check Class - args: <crn> <term> <year>"
+								  " <subj> <crse>")
+	parser.add_option("-f","--file",action="store",metavar="FILE",
+							dest='filearg',type="string",
+							help="Input classes from file FILE")
+	parser.add_option("-d","--delay",action="store",metavar="DELAY",
+							dest='delay',type="int",
+							help="Delay in seconds. Default is 300.")
+	parser.add_option("-q","--quiet",action="store_false",
+							dest="verbose",default=True,
+							help="Don't print to stdout")
 	(options,args) = parser.parse_args()
 
 	# Take no arguments
@@ -77,22 +88,65 @@ if __name__ == "__main__":
 		print "Unknown argument",args[0]
 		exit(1)
 
-	# Must have either [-l] or [-c]
-	if not options.log_args and not options.check_args:
+	# Must have either [-c] or [-f]
+	if not options.filearg and not options.check_args and not options.log_args:
 		parser.print_help()
 		exit(0)
+	
+	# Can't use both [-c] and [-f]
+	if options.filearg and options.check_args:
+		print "Error: Cannot use both -f and -c options"
+		exit(1)
 
 	# If logging in
 	if options.log_args:
 		login( options.log_args[0], options.log_args[1] )
+		
+	# If delay
+	if options.delay and options.delay <= 0:
+		print "Error: Invalid delay. Defaulting to 300."
+		options.delay = 300
+		
+	# If checking file
+	if options.filearg:
+		if options.verbose:
+			print "Loading file: '" + options.filearg + "'"
 
-	# If checking class
-	if options.check_args:
-		checkclass( 
-			options.check_args[0],
-			options.check_args[1],
-			options.check_args[2],
-			options.check_args[3],
-			options.check_args[4]
-		)
+	# Infinite loop
+	while options.check_args or options.filearg:
+	
+		# Open file
+		log = open("etc/classcatcher.log","w")
+	
+		# If checking class
+		if options.check_args:
+			checkclass(
+				log, 
+				options.check_args[0],
+				options.check_args[1],
+				options.check_args[2],
+				options.check_args[3],
+				options.check_args[4]
+			)
+
+		# If check classes from file
+		if options.filearg:
+			classlist = []
+			ifile = open(options.filearg,"r")
+			for line in ifile:
+				course = line.rstrip('\n').split(' ')
+				classlist.append( course )
+			ifile.close()
+			
+			for c in classlist:
+				checkclass( log, c[0], c[1], c[2], c[3], c[4] )
+		
+		# Close file
+		log.close()
+
+		# Wait DELAY amount of time
+		if options.delay:
+			sleep(options.delay)
+		else:
+			sleep( 300 )
 
