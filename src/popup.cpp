@@ -368,7 +368,7 @@ void Popup::set_values( Gtk::Window* g, Tree* t, Error* e ) {
 }
 
 // Error
-void Popup::on_error() {
+void Popup::error_message() {
 
 	error->setfields( this );
 	set_sensitive( false );
@@ -380,9 +380,10 @@ void Popup::on_error() {
 	error->show();
 }
 
-bool isvalid( Glib::ustring s, unsigned int len ) {
+// Check if the string is valid length and all numbers
+bool isvalid( Glib::ustring s, int len ) {
 
-	if( s.length() != len ) return false;
+	if( (int)s.length() != len ) return false;
 	for( int i = 0; i < len; ++i )
 		if( s[i] < '0' || s[i] > '9' ) return false;
 		
@@ -404,7 +405,7 @@ void Popup::on_apply() {
 	
 	if(!isvalid(course.crn,5) || !isvalid(course.crse, 4)) {
 		error->setlabel( "Invalid Field" );
-		on_error();
+		error_message();
 		return;
 	}
 	

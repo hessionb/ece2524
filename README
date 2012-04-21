@@ -2,14 +2,14 @@ Brian Hession, Erik Wenkel, James Miller
 
 Class Catcher
 
-  This program logs into hokiespa with given credentials.  It then checks
+   This program logs into hokiespa with given credentials.  It then checks
 a given list of classes to see if any are open.  If the class is open,
 the user is notified so he or she can add/drop the class.  In the future,
 we might make it possible to add/drop a class from the program itself.
 
 Installation
 
-  The script requires python 3.0.  It is possible it may work for previous
+   The script requires python 3.0.  It is possible it may work for previous
 versions but is not guaranteed.  In order to compile the GUI, gtkmm-3.0-dev
 and its dependencies are required.  You can obtain the source or binary
 packages from http://www.gtkmm.org/en/download.html.  Then to install, all

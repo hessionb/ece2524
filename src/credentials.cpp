@@ -6,9 +6,12 @@
  */
 
 #include "credentials.h"
+#include <fstream>
+
 
 Credentials::Credentials()
 :
+	// Initializations
 	super( "Credentials" ),
 	cred_table( 2, 3, true ),
 	user_label( "Username", Gtk::ALIGN_START ),
@@ -27,9 +30,69 @@ Credentials::Credentials()
 	m_VBox.pack_start( cred_table, Gtk::PACK_SHRINK );
 	m_VBox.pack_start( m_HBox, Gtk::PACK_SHRINK );
 	
+	// Signal Handlers
+	relog_button.signal_clicked().connect( sigc::mem_fun( *this,
+			&Credentials::on_relog ) );
+	
 	// Add to self
 	add( m_VBox );
 }
 
 Credentials::~Credentials() {}
+
+void Credentials::savecredentials() {
+
+	// Get fields
+	Glib::ustring user = user_entry.get_text();
+	Glib::ustring pass = pass_entry.get_text();
+	
+	// Check for error
+	if( user.length() <= 0 || pass.length() <= 0 ) {
+		error->setlabel( "Invalid username or password" );
+		error_message();
+		return;
+	}
+	
+	// Open file
+	std::ofstream credfile( "etc/.cred" );
+	credfile << user << std::endl << pass << std::endl;
+	credfile.close();
+}
+
+Credentials::Cred Credentials::getcredentials() {
+
+	// Get fields
+	Cred c;
+	c.user = user_entry.get_text();
+	c.pass = pass_entry.get_text();
+	
+	return c;
+}
+
+void Credentials::setfields( Gtk::Window* w, Error* e ) {
+
+	parent = w;
+	error = e;
+}
+
+void Credentials::on_relog() {
+
+	// Save credentials
+	savecredentials();
+}
+
+void Credentials::error_message() {
+
+	// Set fields and block parent
+	error->setfields( parent );
+	parent->set_sensitive( false );
+	
+	// Get parent location
+	int x, y;
+	parent->get_position( x, y );
+	error->move( x + 45, y + 100 );
+	
+	// Show error
+	error->show();
+}
 

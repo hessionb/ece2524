@@ -37,7 +37,7 @@ class Popup : public Gtk::Window {
 		// Signal handlers
 		void on_apply();
 		void on_close();
-		void on_error();
+		void error_message();
 		
 		// Entry model
 		class ModelColumns : public Gtk::TreeModel::ColumnRecord {

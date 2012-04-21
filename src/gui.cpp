@@ -38,6 +38,7 @@ GUI::GUI()
 	secondpage.pack_start( m_HBox2, Gtk::PACK_SHRINK );
 	
 	// Notebook
+	cred.setfields( this, &error );
 	firstpage.set_border_width( 5 );
 	firstpage.pack_start( cred, Gtk::PACK_SHRINK );
 	firstpage.pack_start( options, Gtk::PACK_SHRINK );

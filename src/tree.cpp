@@ -56,7 +56,7 @@ void Tree::addtotree( Tree::Course& course ) {
 void Tree::addclass( Tree::Course& course ) {
 
 	// Add class to text file
-	std::ofstream coursefile( "include/.courses", 
+	std::ofstream coursefile( "etc/.courses", 
 			std::fstream::out | std::fstream::app );
 	if( coursefile.is_open() ) {
 		coursefile << course.crn << " "
