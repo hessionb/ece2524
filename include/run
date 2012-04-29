@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# # #
+# Brian Hession, James Miller, Erik Wenkel
+#
+# Main entry point for classcatcher gtk
+#
+#
+
+DIR='ABSDIR'
+
+### Get file names
+credfile=$DIR'/etc/.cred'
+configfile=$DIR'/etc/.config'
+coursesfile=$DIR'/etc/.courses'
+
+### Read Credential file
+if [ -f $credfile ]; then
+	exec 3<&0
+	exec <$credfile
+
+	pos=0
+	while read line
+	do
+		cred[pos]=$line
+		pos=`expr $pos + 1`
+	done
+	
+	exec <&3
+else
+	$DIR/classcatcher-gtk
+fi
+
+### Read Configuration file
+if [ -f $configfile ]; then
+	exec 3<&0
+	exec <$configfile
+	
+	pos=0
+	while read line
+	do
+		config[pos]=$line
+		pos=`expr $pos + 1`
+	done
+	
+	exec <&3
+else
+	$DIR/classcatcher-gtk
+fi
+
+### Read Courses file
+if [ ! -f $coursesfile ]; then
+	$DIR/classcatcher-gtk
+fi
+
+### Check if process is running
+if ps -C classcatcher > /dev/null
+then
+	killall classcatcher
+fi
+
+### Generate conky script
+echo "background yes\nuse_xft yes\nown_window yes\nown_window_type normal\n#own_window_transparent no\nown_window_argb_visual yes\nown_window_argb_value 0\nown_window_hints undecorated,below,sticky,skip_taskbar,skip_pager\ndouble_buffer yes\nminimum_size 100 100\ndraw_shades no\ndraw_outline no\ndefault_color white\ndefault_shade_color black\nalignment top_right\noverride_utf8_locale yes\ntext_buffer_size 256\ngap_y 0\ngap_x 15\n\nTEXT\n"'${font Arial:size=10:style=bold}$alignr ${exec '$DIR'/include/display.sh}' > $DIR/etc/.conkyrc_classcatcher
+
+### Run classcatcher python script
+touch $DIR/etc/classcatcher.log
+conky -c $DIR/etc/.conkyrc_classcatcher &
+$DIR/classcatcher -q -l ${cred[0]} ${cred[1]} -d ${config[0]} -f $coursesfile
+

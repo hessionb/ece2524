@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# # #
+# Brian Hession, James Miller, Erik Wenkel
+#
+# Configure script.
+# Checks for dependencies and updates directories
+#
+#
+
+
+dir1=`find /usr/bin/conky`
+dir2=`locate /var/lib/dpkg/info/libgtkmm-3.0-dev.md5sums`
+
+
+echo "Checking for existance of libgtkmm-3.0..."
+### Check for gtkmm3.0
+if [ -z $dir2 ];then
+	echo "Dependency: \"gtkmm3.0\" not found."
+	echo -e "Would you like to install gtkmm3.0 [Y/n]? "
+	read  word1
+	if [ $word1 = 'Y' ] || [ $word1 = 'y' ];then
+		echo "Installing gtkmm3.0..."
+		sudo apt-get install gtkmm3.0-dev
+	else
+		echo "Abort"
+		echo "Missing package: gtkmm3.0"
+		echo "Error: Configuration failed."
+		exit 1
+	fi
+fi
+ 
+
+echo "Checking for conky in directory: /usr/bin/..."
+### Check for conky
+if [ -z $dir1  ];then
+	echo "Dependency: \"conky\" not found."
+	echo "Would you like to install conky [Y/n]? "
+	read  word1
+	if [ $word1 = 'Y' ] || [ $word1 = 'y' ];then
+		echo "Installing conky..."
+		sudo apt-get install conky
+	else 
+		echo "Abort"
+		echo "Missing package: conky"
+		echo "Error: Configuration failed."
+		exit 1
+	fi
+fi
+
+
+### Update directories
+DIR=`pwd`
+echo "Updating classcatcher..."
+check=`sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' classcatcher`
+if [ ! -z $check ];then
+	mv -f classcatcher.bak classcatcher
+	echo "An unknown error occurred."
+	exit 1
+fi
+echo "Updating classcatcher-client..."
+sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' classcatcher-client
+if [ ! -z $check ];then
+	mv -f classcatcher-client.bak classcatcher-client
+	echo "An unknown error occurred."
+	exit 1
+fi
+
+echo "Moving into directory: include/"
+cd include/
+
+echo "Updating display.sh..."
+sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' display.sh
+if [ ! -z $check ];then
+	mv -f display.sh.bak display.sh
+	echo "An unknown error occurred."
+	echo "Backing out of directory: include/"
+	cd ..
+	exit 1
+fi
+echo "Updating hokielogger.py..."
+sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' hokielogger.py
+if [ ! -z $check ];then
+	mv -f hokielogger.py.bak hokielogger.py
+	echo "An unknown error occurred."
+	echo "Backing out of directory: include/"
+	cd ..
+	exit 1
+fi
+echo "Updating run..."
+sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' run
+if [ ! -z $check ];then
+	mv -f run.bak run
+	echo "An unknown error occurred."
+	echo "Backing out of directory: include/"
+	cd ..
+	exit 1
+fi
+
+echo "Backing out of directory: include/"
+cd ..
+
+echo "Removing classcatcher.bak..."
+rm classcatcher.bak
+echo "Removing classcatcher-client.bak..."
+rm classcatcher-client.bak
+echo "Moving into directory: include/"
+cd include/
+echo "Removing display.sh.bak..."
+rm display.sh.bak
+echo "Removing hokielogger.py.bak..."
+rm hokielogger.py.bak
+echo "Removing run.bak..."
+rm run.bak
+
+echo "Backing out of directory: include/"
+cd ..
+
+echo "Finished."
+exit 0
+

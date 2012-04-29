@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# # #
+# Brian Hession, James Miller, Erik Wenkel
+#
+# Main entry point to classcatcher with gtk
+#
+#
+
+DIR='ABSDIR'
+
+### Check if process is running
+if ps -C run > /dev/null
+then
+	$DIR/classcatcher-gtk
+	exit 0
+else
+	$DIR/include/run
+fi
+
