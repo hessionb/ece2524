@@ -14,9 +14,10 @@
 #
 
 from optparse import OptionParser
-from sys import path,exit
+from sys import path,exit,argv
 from time import sleep
-path.append('include')
+DIR='/home/brian'
+path.append(DIR + "/include")
 from hokielogger import HokieLogger
 
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
 
 	# If logging in
 	if options.log_args:
-		login( options.log_args[0], options.log_args[1] )
+		check = login( options.log_args[0], options.log_args[1] )
 		
 	# If delay
 	if options.delay and options.delay <= 0:
@@ -116,7 +117,13 @@ if __name__ == "__main__":
 	while options.check_args or options.filearg:
 	
 		# Open file
-		log = open("etc/classcatcher.log","w")
+		log = open(DIR + "/etc/classcatcher.log","w")
+
+		log.write("Login ")
+		if check:
+			log.write("successful.\n")
+		else:
+			log.write("failed.\n")
 	
 		# If checking class
 		if options.check_args:

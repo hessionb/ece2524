@@ -12,6 +12,8 @@
 import cookielib
 import urllib
 import urllib2
+from sys import argv
+DIR = 'ABSDIR'
 
 
 class HokieLogger(object):
@@ -28,7 +30,7 @@ class HokieLogger(object):
 	def __init__(self):
 		"""Initialize"""
 
-		self.cookiedir = "etc/cookie.txt"
+		self.cookiedir = DIR + "/etc/cookie.txt"
 
 		# Create cookiejar
 		self.jar = cookielib.MozillaCookieJar()
@@ -132,7 +134,7 @@ class HokieLogger(object):
 				info.append(line.strip())
 
 		# Strip extra crap off of the line
-		seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').rstrip('</TD>')
+		seats = info[3].lstrip('<TD CLASS="mpdefault"style=text-align:center;>').lstrip('<B STYLE=color:red;>Full &nbsp;&nbsp;').rstrip('</TD>').rstrip('</B>')
 
 		# Check if its a number, then check if greater than 0
 		if len(info) == 5:

@@ -15,6 +15,7 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
 #include <glibmm/ustring.h>
+#include <vector>
 
 #include "tree.h"
 #include "credentials.h"
@@ -34,6 +35,7 @@ class GUI : public Gtk::Window {
 		// Signal handlers
 		void deleteclass();
 		void popupwindow();
+		void on_apply();
 
 		// Formatting
 		Gtk::Notebook notebook;
@@ -70,6 +72,19 @@ class GUI : public Gtk::Window {
 		
 		// Error
 		Error error;
+		
+		
+		/****************************************************
+		* Credentials and Classes / Main functions, etc
+		****************************************************/
+		Credentials::Cred c;
+		std::vector<Tree::Course> courses;
+		unsigned int delay;
+		
+		void loadcredentials();
+		void loadoptions();
+		/****************************************************
+		*****************************************************/
 };
 
 #endif

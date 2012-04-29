@@ -75,6 +75,12 @@ void Credentials::setfields( Gtk::Window* w, Error* e ) {
 	error = e;
 }
 
+void Credentials::set_text( Credentials::Cred c ) {
+
+	user_entry.set_text( c.user );
+	pass_entry.set_text( c.pass );
+}
+
 void Credentials::on_relog() {
 
 	// Save credentials

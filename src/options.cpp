@@ -6,11 +6,12 @@
  */
 
 #include "options.h"
-#include <iostream>
+#include <fstream>
 
 
 Options::Options()
 :
+	// Initializations
 	super( "Options" ),
 	opt_table( 1, 3, true ),
 	occurance_label( "Check every", Gtk::ALIGN_START )
@@ -24,7 +25,7 @@ Options::Options()
 	select_time.append( "15 Min" );
 	select_time.append( "30 Min" );
 	select_time.append( "1 Hour" );
-	select_time.set_active_text( "5 Min" ); // Select 5 min
+	select_time.set_active( 3 ); // Select 5 min
 	
 	// Add to table
 	opt_table.set_border_width( 5 );
@@ -72,5 +73,47 @@ unsigned int Options::getselection() {
 	}
 	
 	return time;
+}
+
+void Options::setselection( unsigned int d ) {
+
+	int row;
+	switch( d ) {
+		case 30:
+			row = 0;
+			break;
+		case 60:
+			row = 1;
+			break;
+		case 120:
+			row = 2;
+			break;
+		case 300:
+			row = 3;
+			break;
+		case 600:
+			row = 4;
+			break;
+		case 900:
+			row = 5;
+			break;
+		case 1800:
+			row = 6;
+			break;
+		case 3600:
+			row = 7;
+			break;
+		default:
+			row = 3;
+			{
+				std::ofstream ofile( "etc/.config" );
+				if( ofile.is_open() ) {
+					ofile << 300 << std::endl;
+					ofile.close();
+				}
+			}
+			break;
+	}
+	select_time.set_active( row );
 }
 

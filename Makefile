@@ -1,6 +1,6 @@
 SRC := src/driver.cpp src/gui.cpp src/tree.cpp src/credentials.cpp src/options.cpp src/popup.cpp src/error.cpp
 INC := ./headers/
-NAME := gClassCatcher
+NAME := classcatcher-gtk
 CC := g++
 FLAGS := -Wall -g
 PKG := `pkg-config gtkmm-3.0 --cflags --libs`
@@ -10,3 +10,4 @@ main:
 
 clean:
 	rm -f */*~ *~
+

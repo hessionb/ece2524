@@ -31,6 +31,7 @@ class Credentials : public Gtk::Frame {
 		void savecredentials();
 		Cred getcredentials();
 		void setfields( Gtk::Window* w, Error* e );
+		void set_text( Cred c );
 	
 	protected:
 		typedef Gtk::Frame super;

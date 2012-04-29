@@ -8,6 +8,7 @@
  */
 
 #include "gui.h"
+#include <fstream>
 
 
 GUI::GUI()
@@ -62,6 +63,12 @@ GUI::GUI()
 			&GUI::deleteclass ) );
 	add_button.signal_clicked().connect( sigc::mem_fun( *this,
 			&GUI::popupwindow ) );
+	apply_button.signal_clicked().connect( sigc::mem_fun( *this,
+			&GUI::on_apply ) );
+			
+	// Load file
+	loadcredentials();
+	loadoptions();
 	
 	// Add to window
 	add( m_VBox );
@@ -89,5 +96,41 @@ void GUI::popupwindow() {
 	popup.move( x + 15, y + 50 );
 	set_sensitive( false );
 	popup.show();
+}
+
+// When apply button is pressed
+void GUI::on_apply() {
+
+	cred.savecredentials();
+	c = cred.getcredentials();
+	delay = options.getselection();
+	
+	std::ofstream ofile( "etc/.config" );
+	if( ofile.is_open() ) {
+		ofile << delay << std::endl;
+		ofile.close();
+	}
+}
+
+void GUI::loadcredentials() {
+
+	// Open file and read
+	std::ifstream credfile( "etc/.cred" );
+	if( credfile.is_open() ) {
+		credfile >> c.user >> c.pass;
+		credfile.close();
+		cred.set_text( c );
+	}
+}
+
+void GUI::loadoptions() {
+
+	// Open file and read
+	std::ifstream ifile( "etc/.config" );
+	if( ifile.is_open() ) {
+		ifile >> delay;
+		ifile.close();
+		options.setselection( delay );
+	}
 }
 

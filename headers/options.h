@@ -17,7 +17,8 @@ class Options : public Gtk::Frame {
 		Options();
 		virtual ~Options();
 		
-		virtual unsigned int getselection();
+		unsigned int getselection();
+		void setselection( unsigned int d );
 	
 	protected:
 		typedef Gtk::Frame super;
