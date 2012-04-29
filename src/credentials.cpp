@@ -15,8 +15,7 @@ Credentials::Credentials()
 	super( "Credentials" ),
 	cred_table( 2, 3, true ),
 	user_label( "Username", Gtk::ALIGN_START ),
-	pass_label( "Password", Gtk::ALIGN_START ),
-	relog_button( "_Relog", true )
+	pass_label( "Password", Gtk::ALIGN_START )
 {	
 	// Add everything
 	pass_entry.set_visibility( false );
@@ -24,15 +23,9 @@ Credentials::Credentials()
 	cred_table.attach( user_entry, 1, 3, 0, 1 );
 	cred_table.attach( pass_label, 0, 1, 1, 2 );
 	cred_table.attach( pass_entry, 1, 3, 1, 2 );
-	relog_button.set_size_request( 85, 5 );
-	m_HBox.pack_end( relog_button, Gtk::PACK_SHRINK );
 	m_VBox.set_border_width( 5 );
 	m_VBox.pack_start( cred_table, Gtk::PACK_SHRINK );
 	m_VBox.pack_start( m_HBox, Gtk::PACK_SHRINK );
-	
-	// Signal Handlers
-	relog_button.signal_clicked().connect( sigc::mem_fun( *this,
-			&Credentials::on_relog ) );
 	
 	// Add to self
 	add( m_VBox );
@@ -79,12 +72,6 @@ void Credentials::set_text( Credentials::Cred c ) {
 
 	user_entry.set_text( c.user );
 	pass_entry.set_text( c.pass );
-}
-
-void Credentials::on_relog() {
-
-	// Save credentials
-	savecredentials();
 }
 
 void Credentials::error_message() {

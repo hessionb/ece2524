@@ -110,6 +110,8 @@ void GUI::on_apply() {
 		ofile << delay << std::endl;
 		ofile.close();
 	}
+	
+	hide();
 }
 
 void GUI::loadcredentials() {

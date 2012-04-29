@@ -48,7 +48,6 @@ class Credentials : public Gtk::Frame {
 		// Widgets
 		Gtk::Label user_label, pass_label;
 		Gtk::Entry user_entry, pass_entry;
-		Gtk::Button relog_button;
 		
 		// Error handling
 		Gtk::Window* parent;
