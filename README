@@ -37,3 +37,8 @@ files around in the folders.  The directories are hard-coded into the scripts
 and program.
 *******************************************************************************
 
+CONFIGURATION:
+    The Makefile generates a conky script called ".conkyrc_classcatcher" in the
+etc/ directory.  You can configure it after running make.  If you re-run the
+Makefile, you will have to reconfigure the conky script.
+
