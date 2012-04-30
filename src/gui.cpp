@@ -19,6 +19,12 @@ GUI::GUI()
 	add_button( "A_dd Class", true ),
 	remove_button( "Re_move Class", true )
 {
+	// Initialize files
+	char DIR[256] = "ABSDIR";
+	
+	sprintf( cred_file, "%s/etc/.cred", DIR );
+	sprintf( opt_file, "%s/etc/.config", DIR );
+
 	// Format window
 	set_title( "Class Catcher" );
 	set_resizable( false );
@@ -105,7 +111,7 @@ void GUI::on_apply() {
 	c = cred.getcredentials();
 	delay = options.getselection();
 	
-	std::ofstream ofile( "etc/.config" );
+	std::ofstream ofile( opt_file );
 	if( ofile.is_open() ) {
 		ofile << delay << std::endl;
 		ofile.close();
@@ -117,7 +123,7 @@ void GUI::on_apply() {
 void GUI::loadcredentials() {
 
 	// Open file and read
-	std::ifstream credfile( "etc/.cred" );
+	std::ifstream credfile( cred_file );
 	if( credfile.is_open() ) {
 		credfile >> c.user >> c.pass;
 		credfile.close();
@@ -128,7 +134,7 @@ void GUI::loadcredentials() {
 void GUI::loadoptions() {
 
 	// Open file and read
-	std::ifstream ifile( "etc/.config" );
+	std::ifstream ifile( opt_file );
 	if( ifile.is_open() ) {
 		ifile >> delay;
 		ifile.close();

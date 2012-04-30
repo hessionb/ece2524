@@ -3,9 +3,10 @@ Brian Hession, Erik Wenkel, James Miller
 Class Catcher
 
     This program logs into hokiespa with given credentials.  It then checks
-a given list of classes to see if any are open.  If the class is open,
-the user is notified so he or she can add/drop the class.  In the future,
-we might make it possible to add/drop a class from the program itself.
+a given list of classes to see if any are open.  The status of the class is
+written to the desktop using a program called conky.  The main program is
+"classcatcher-client" which runs the gtk.  However, the "classcatcher" script
+can be run independently.
 
 Installation
 
@@ -17,21 +18,20 @@ to display the information on the desktop.  You can obtain these files from
 http://conky.sourceforge.net/.
 
 STEP 1:
-
     Run the configure script.  The configure script checks for dependencies
-and updates all of the absolute directories for each script.
-
-***********************************NOTE****************************************
-If this folder is moved, it is necessary to re-run the configure script in order 
-to update the new directories.
-*******************************************************************************
+and updates all of the directories for each script and cpp file.
 
 STEP 2:
-    Run the Makefile.  This c++ program is independent of the scripts and
-therefore, not necessary to recompile after reconfiguring.
+    Run the Makefile.
 
 FINISHED:
-    The main entry point is "classcatcher-client".  This script runs the GUI
-for Class Catcher.  It is possible to just run "classcatcher" in the terminal
-if you choose to.
+    The main entry point is "classcatcher-client".  The program has been added
+to the applications folder and can be searched for in Unity's search feature.
+This script runs the GUI for Class Catcher.  It is possible to just run
+"classcatcher" in the terminal if you choose to.
+
+***********************************NOTE****************************************
+If this folder is moved, it is necessary to re-run the configure script and
+re-make the program in order to update the new directories.
+*******************************************************************************
 

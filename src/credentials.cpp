@@ -17,6 +17,11 @@ Credentials::Credentials()
 	user_label( "Username", Gtk::ALIGN_START ),
 	pass_label( "Password", Gtk::ALIGN_START )
 {	
+	// Initialize everything
+	char DIR[256] = "ABSDIR";
+	
+	sprintf( cred_file, "%s/etc/.cred", DIR );
+	
 	// Add everything
 	pass_entry.set_visibility( false );
 	cred_table.attach( user_label, 0, 1, 0, 1 );
@@ -47,7 +52,7 @@ void Credentials::savecredentials() {
 	}
 	
 	// Open file
-	std::ofstream credfile( "etc/.cred" );
+	std::ofstream credfile( cred_file );
 	credfile << user << std::endl << pass << std::endl;
 	credfile.close();
 }

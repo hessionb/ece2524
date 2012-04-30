@@ -12,6 +12,12 @@
 
 Tree::Tree() {
 
+	// Initializing everything
+	char DIR[256] = "ABSDIR";
+	
+	sprintf( course_file, "%s/etc/.courses", DIR );
+	sprintf( course_temp, "%s/etc/.courses.tmp", DIR );
+
 	m_refTreeModel = Gtk::ListStore::create( m_Columns );
 	set_model( m_refTreeModel );
 	
@@ -29,7 +35,7 @@ Tree::~Tree() {}
 void Tree::loadfromfile() {
 
 	// Read from text file
-	std::ifstream coursefile( "etc/.courses" );
+	std::ifstream coursefile( course_file );
 	if( coursefile.is_open() ) {
 		while( true ) {
 			Tree::Course c;
@@ -56,7 +62,7 @@ void Tree::addtotree( Tree::Course& course ) {
 void Tree::addclass( Tree::Course& course ) {
 
 	// Add class to text file
-	std::ofstream coursefile( "etc/.courses", 
+	std::ofstream coursefile( course_file, 
 			std::fstream::out | std::fstream::app );
 	if( coursefile.is_open() ) {
 		coursefile << course.crn << " "
@@ -75,8 +81,8 @@ void Tree::deleteclass() {
 	if( *iter ) {
 	
 		Glib::ustring str = (*iter)[m_Columns.m_col_crn];
-		std::ifstream coursefile( "etc/.courses" );
-		std::ofstream tempfile( "etc/.courses.tmp" );
+		std::ifstream coursefile( course_file );
+		std::ofstream tempfile( course_temp );
 		if( coursefile.is_open() && tempfile.is_open() ) {
 			while( true ) {
 				char buf[10], line[256];
@@ -89,8 +95,8 @@ void Tree::deleteclass() {
 			}
 			coursefile.close();
 			tempfile.close();
-			std::remove( "etc/.courses" ); // Remove and rename file
-			std::rename( "etc/.courses.tmp", "etc/.courses" );
+			std::remove( course_file ); // Remove and rename file
+			std::rename( course_temp, course_file );
 		}
 		m_refTreeModel->erase( iter ); // Erase from tree
 	}

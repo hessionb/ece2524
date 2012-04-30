@@ -59,7 +59,7 @@ if [ ! -z $check ];then
 	exit 1
 fi
 echo "Updating classcatcher-client..."
-sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' classcatcher-client
+check=`sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' classcatcher-client`
 if [ ! -z $check ];then
 	mv -f classcatcher-client.bak classcatcher-client
 	echo "An unknown error occurred."
@@ -68,9 +68,8 @@ fi
 
 echo "Moving into directory: include/"
 cd include/
-
 echo "Updating display.sh..."
-sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' display.sh
+check=`sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' display.sh`
 if [ ! -z $check ];then
 	mv -f display.sh.bak display.sh
 	echo "An unknown error occurred."
@@ -79,7 +78,7 @@ if [ ! -z $check ];then
 	exit 1
 fi
 echo "Updating hokielogger.py..."
-sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' hokielogger.py
+check=`sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' hokielogger.py`
 if [ ! -z $check ];then
 	mv -f hokielogger.py.bak hokielogger.py
 	echo "An unknown error occurred."
@@ -88,7 +87,7 @@ if [ ! -z $check ];then
 	exit 1
 fi
 echo "Updating run..."
-sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' run
+check=`sed -i.bak 's,DIR=.*,DIR='\'$DIR\'',' run`
 if [ ! -z $check ];then
 	mv -f run.bak run
 	echo "An unknown error occurred."
@@ -96,8 +95,48 @@ if [ ! -z $check ];then
 	cd ..
 	exit 1
 fi
-
 echo "Backing out of directory: include/"
+cd ..
+
+echo "Moving into director: src/"
+cd src/
+echo "Updating gui.cpp..."
+check=`sed -i.bak 's,DIR\[256\]\ =.*,DIR\[256\]\ =\ '\"$DIR\"';,' gui.cpp`
+if [ ! -z $check ];then
+	mv -f gui.cpp.bak gui.cpp
+	echo "An unknown error occurred."
+	echo "Backing out of directory: src/"
+	cd ..
+	exit 1
+fi
+echo "Updating credentials.cpp..."
+check=`sed -i.bak 's,DIR\[256\]\ =.*,DIR\[256\]\ =\ '\"$DIR\"';,' credentials.cpp`
+if [ ! -z $check ];then
+	mv -f credentials.cpp.bak credentials.cpp
+	echo "An unknown error occurred."
+	echo "Backing out of directory: src/"
+	cd ..
+	exit 1
+fi
+echo "Updating options.cpp..."
+check=`sed -i.bak 's,DIR\[256\]\ =.*,DIR\[256\]\ =\ '\"$DIR\"';,' options.cpp`
+if [ ! -z $check ];then
+	mv -f options.cpp.bak options.cpp
+	echo "An unknown error occurred."
+	echo "Backing out of directory: src/"
+	cd ..
+	exit 1
+fi
+echo "Updating tree.cpp..."
+check=`sed -i.bak 's,DIR\[256\]\ =.*,DIR\[256\]\ =\ '\"$DIR\"';,' tree.cpp`
+if [ ! -z $check ];then
+	mv -f tree.cpp.bak tree.cpp
+	echo "An unknown error occurred."
+	echo "Backing out of directory: src/"
+	cd ..
+	exit 1
+fi
+echo "Backing out of directory: src/"
 cd ..
 
 echo "Removing classcatcher.bak..."
@@ -112,9 +151,23 @@ echo "Removing hokielogger.py.bak..."
 rm hokielogger.py.bak
 echo "Removing run.bak..."
 rm run.bak
-
 echo "Backing out of directory: include/"
 cd ..
+echo "Moving into directory: src/"
+cd src/
+echo "Removing gui.cpp.bak..."
+rm gui.cpp.bak
+echo "Removing credentials.cpp.bak..."
+rm credentials.cpp.bak
+echo "Removing options.cpp.bak..."
+rm options.cpp.bak
+echo "Removing tree.cpp.bak..."
+rm tree.cpp.bak
+echo "Backing out of directory: src/"
+cd ..
+
+echo "Generating Makefile..."
+echo 'SRC := src/driver.cpp src/gui.cpp src/tree.cpp src/credentials.cpp src/options.cpp src/popup.cpp src/error.cpp\nINC := ./headers/\nNAME := classcatcher-gtk\nCC := g++\nFLAGS := -Wall -g\nPKG := `pkg-config gtkmm-3.0 --cflags --libs`\nDIR := '$DIR'\n\nmain:\n\t${CC} ${FLAGS} ${SRC} -I${INC} -o ${NAME} ${PKG}\n\tmkdir -p ~/.local\n\tmkdir -p ~/.local/share\n\tmkdir -p ~/.local/share/applications\n\techo "[Desktop Entry]\\nName=Class Catcher\\nComment=Class Catcher\\nExec="${DIR}"/classcatcher-client -s\\nIcon=preferences-system\\nTerminal=false\\nType=Application\\nCategories=Application;Development;Programming;\\nStartupNotify=true" > ~/.local/share/applications/classcatcher.desktop\n\nclean:\n\trm -f */*~ *~' > $DIR/Makefile
 
 echo "Finished."
 exit 0

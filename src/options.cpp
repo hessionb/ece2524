@@ -16,6 +16,11 @@ Options::Options()
 	opt_table( 1, 3, true ),
 	occurance_label( "Check every", Gtk::ALIGN_START )
 {
+	// INITIALIZE
+	char DIR[256] = "ABSDIR";
+	
+	sprintf( opt_file, "%s/etc/.config", DIR );
+
 	// Format combo box
 	select_time.append( "30 Sec" );
 	select_time.append( "1 Min" );
@@ -106,7 +111,7 @@ void Options::setselection( unsigned int d ) {
 		default:
 			row = 3;
 			{
-				std::ofstream ofile( "etc/.config" );
+				std::ofstream ofile( opt_file );
 				if( ofile.is_open() ) {
 					ofile << 300 << std::endl;
 					ofile.close();

@@ -62,6 +62,9 @@ class Tree : public Gtk::TreeView {
 		
 		// Course handlers
 		std::vector<Course> courses;
+		
+		char course_file[256];
+		char course_temp[256];
 };
 
 #endif

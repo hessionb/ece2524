@@ -83,6 +83,9 @@ class GUI : public Gtk::Window {
 		
 		void loadcredentials();
 		void loadoptions();
+		
+		char cred_file[256];
+		char opt_file[256];
 		/****************************************************
 		*****************************************************/
 };

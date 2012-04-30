@@ -26,5 +26,7 @@ class Options : public Gtk::Frame {
 		Gtk::Table opt_table;
 		Gtk::Label occurance_label;
 		Gtk::ComboBoxText select_time;
+		
+		char opt_file[256];
 };
 

@@ -52,5 +52,7 @@ class Credentials : public Gtk::Frame {
 		// Error handling
 		Gtk::Window* parent;
 		Error* error;
+		
+		char cred_file[256];
 };
 
