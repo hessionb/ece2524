@@ -32,6 +32,8 @@ This script runs the GUI for Class Catcher.  It is possible to just run
 
 ***********************************NOTE****************************************
 If this folder is moved, it is necessary to re-run the configure script and
-re-make the program in order to update the new directories.
+re-make the program in order to update the new directories.  DO NOT move the
+files around in the folders.  The directories are hard-coded into the scripts
+and program.
 *******************************************************************************
 
