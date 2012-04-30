@@ -13,7 +13,7 @@ import cookielib
 import urllib
 import urllib2
 from sys import argv
-DIR = 'ABSDIR'
+DIR='ABSDIR'
 
 
 class HokieLogger(object):

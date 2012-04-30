@@ -16,7 +16,7 @@
 from optparse import OptionParser
 from sys import path,exit,argv
 from time import sleep
-DIR='/home/brian'
+DIR='ABSDIR'
 path.append(DIR + "/include")
 from hokielogger import HokieLogger
 

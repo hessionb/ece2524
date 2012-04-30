@@ -13,8 +13,7 @@ DIR='ABSDIR'
 if ps -C run > /dev/null
 then
 	$DIR/classcatcher-gtk
-	exit 0
-else
-	$DIR/include/run
+	killall run
 fi
+$DIR/include/run
 
