@@ -13,23 +13,25 @@ DIR='ABSDIR'
 arg=$1
 
 ### Help screen
-if [ $arg = '-h' ] || [ $arg = '--help' ]; then
-	echo "Usage: classcatcher-client [options]\n"
-	echo "Options"
-	echo "-h, --help\tShow this help screen"
-	echo "-s, --show\tShows the gtk client"
-	exit 0
-fi
-
-### Show gtk
-if [ $arg = '-s' ] || [ $arg = '--show' ]; then
-	$DIR/classcatcher-gtk
-	if ps -C run > /dev/null
-	then
-		killall run
+if [ ! -z $arg ]; then
+	if [ $arg = '-h' ] || [ $arg = '--help' ]; then
+		echo "Usage: classcatcher-client [options]\n"
+		echo "Options"
+		echo "-h, --help\tShow this help screen"
+		echo "-s, --show\tShows the gtk client"
+		exit 0
 	fi
-	$DIR/include/run
-	exit 0
+
+	### Show gtk
+	if [ $arg = '-s' ] || [ $arg = '--show' ]; then
+		$DIR/classcatcher-gtk
+		if ps -C run > /dev/null
+		then
+			killall run
+		fi
+		$DIR/include/run
+		exit 0
+	fi
 fi
 
 ### Main entry
