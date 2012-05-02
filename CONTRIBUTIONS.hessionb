@@ -1,0 +1,4 @@
+	I made the hokielogger and classcatcher python scripts.  I also contributed
+by setting up the output/input files for the GUI.  I also made the part of the
+configure script that changed the directory variables in each file that needed 
+it.
