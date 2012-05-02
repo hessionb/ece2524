@@ -1,0 +1,5 @@
+Awesome program! I hope it works... can't wait to use it and learn from the website handling aspect of it.
+
+It seems that you have hardcoded the class into the program (CRN and such).  Perhaps you can provide an area where this can be inputted by the user?  Or perhaps you can provide a file where you save the classes you are looking for in the file and it loops through until it is found.  Obviously, most individuals in ECE would have no problem detmerining how to change the class information.  However, it is likely that other majors/individuals would be unable to use this program and would constantly check if the ECE 4xxx class was open.
+
+Other than that... amazing prog. 
