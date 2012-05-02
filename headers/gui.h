@@ -1,5 +1,5 @@
 /***
- * Brian Hession -- April 13, 2012
+ * Brian Hession, Erik Wenkel, James Miller -- April 13, 2012
  *
  * GUI Header.
  * GUI extends Window in the GTK package

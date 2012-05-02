@@ -1,5 +1,5 @@
 /***
- * Brian Hession -- April 14, 2012
+ * Brian Hession, Erik Wenkel, James Miller -- April 14, 2012
  *
  * Tree class extending Tree/View to 
  * add/drop classes

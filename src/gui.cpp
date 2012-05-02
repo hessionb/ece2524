@@ -1,5 +1,5 @@
 /***
- * Brian Hession -- April 13, 2012
+ * Brian Hession, Erik Wenkel, James Miller -- April 13, 2012
  *
  * GUI Implementation
  * Just read the comments in the code to figure
